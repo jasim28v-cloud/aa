@@ -10,17 +10,17 @@ const firebaseConfig = {
     measurementId: "G-E7ZVVZ5HPV"
 };
 
-// Initialize Firebase
+// Initialize Firebase (Compat version for simplicity)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 const storage = firebase.storage();
 
-// Cloudinary Settings (your account)
+// Cloudinary Settings
 const CLOUD_NAME = 'dnmpmysk6';
 const UPLOAD_PRESET = 'rsxdfdgw';
 
-// Admin Emails - CHANGE THIS TO YOUR EMAIL
-const ADMIN_EMAILS = ['jasim28v@gmail.com'];  // ✅ تم التعديل
+// Admin Emails (Edit this with your email)
+const ADMIN_EMAILS = ['admin@example.com']; // <--- CHANGE TO YOUR EMAIL
 
-console.log('✅ FOXE Ultimate System Ready');
+console.log('✅ SHΔDØW Modern System Ready');
