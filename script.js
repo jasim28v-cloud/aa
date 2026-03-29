@@ -1,6 +1,3 @@
-import { auth, db, ref, push, set, onValue, update, get, child, CLOUD_NAME, UPLOAD_PRESET } from './firebase-config.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
 // ========== المتغيرات العامة ==========
 let currentUser = null;
 let currentUserData = null;
@@ -12,6 +9,7 @@ let viewingProfileUserId = null;
 let selectedVideoFile = null;
 let popularHashtags = ['تيك_توك', 'ترند', 'اكسبلور', 'فن', 'موسيقى', 'ضحك', 'رياضة', 'طبخ', 'سفر', 'تحدي'];
 let currentChatUserId = null;
+let allChats = [];
 
 // ========== إعدادات الأدمن ==========
 const ADMIN_EMAILS = ['jasim28v@gmail.com'];
@@ -290,7 +288,7 @@ window.toggleFollow = async function(userId, btn) {
     }
 };
 
-// ========== التعليقات ==========
+// ========== التعليقات والردود ==========
 window.openComments = async function(videoId) {
     const comment = prompt("أضف تعليقاً:");
     if (comment && comment.trim()) {
