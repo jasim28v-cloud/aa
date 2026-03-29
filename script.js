@@ -1,6 +1,3 @@
-import { auth, db, ref, push, set, onValue, update, get, child, CLOUD_NAME, UPLOAD_PRESET } from './firebase-config.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
 // ========== إعدادات الأدمن ==========
 const ADMIN_EMAILS = ['jasim28v@gmail.com'];
 let isAdmin = false;
@@ -16,30 +13,30 @@ let selectedPostFile = null;
 let currentView = 'feed';
 
 // ========== مصادقة ==========
-window.switchAuth = function(type) {
+function switchAuth(type) {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
     document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
     document.getElementById(type + 'Form').classList.add('active');
-};
+}
 
-window.login = async function() {
+async function login() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     const msg = document.getElementById('loginMsg');
     if (!email || !password) { msg.innerText = 'الرجاء ملء جميع الحقول'; return; }
     msg.innerText = 'جاري تسجيل الدخول...';
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        await auth.signInWithEmailAndPassword(email, password);
         msg.innerText = '';
     } catch (error) {
         if (error.code === 'auth/user-not-found') msg.innerText = 'لا يوجد حساب بهذا البريد';
         else if (error.code === 'auth/wrong-password') msg.innerText = 'كلمة المرور غير صحيحة';
         else msg.innerText = 'حدث خطأ: ' + error.message;
     }
-};
+}
 
-window.register = async function() {
+async function register() {
     const username = document.getElementById('regName').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPass').value;
@@ -48,8 +45,8 @@ window.register = async function() {
     if (password.length < 6) { msg.innerText = 'كلمة المرور 6 أحرف على الأقل'; return; }
     msg.innerText = 'جاري إنشاء الحساب...';
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await set(ref(db, `users/${userCredential.user.uid}`), {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await db.ref(`users/${userCredential.user.uid}`).set({
             username, email, bio: '. لا أعلم ، ولا اهتم .', avatarUrl: '', coverUrl: '', followers: {}, following: {}, createdAt: Date.now()
         });
         msg.innerText = '';
@@ -57,19 +54,19 @@ window.register = async function() {
         if (error.code === 'auth/email-already-in-use') msg.innerText = 'البريد الإلكتروني مستخدم بالفعل';
         else msg.innerText = 'حدث خطأ: ' + error.message;
     }
-};
+}
 
-window.logout = function() { signOut(auth); location.reload(); };
+function logout() { auth.signOut(); location.reload(); }
 
 // ========== تحميل البيانات ==========
 async function loadUserData() {
-    const snap = await get(child(ref(db), `users/${currentUser.uid}`));
+    const snap = await db.ref(`users/${currentUser.uid}`).get();
     if (snap.exists()) currentUserData = { uid: currentUser.uid, ...snap.val() };
 }
-onValue(ref(db, 'users'), (s) => { allUsers = s.val() || {}; });
+db.ref('users').on('value', s => { allUsers = s.val() || {}; });
 
 // ========== المنشورات ==========
-onValue(ref(db, 'posts'), (s) => {
+db.ref('posts').on('value', (s) => {
     const data = s.val();
     if (!data) { allPosts = []; renderFeed(); renderReels(); renderProfile(); return; }
     allPosts = [];
@@ -81,7 +78,7 @@ onValue(ref(db, 'posts'), (s) => {
 });
 
 // ========== القصص ==========
-onValue(ref(db, 'stories'), async (s) => {
+db.ref('stories').on('value', async (s) => {
     const data = s.val();
     const now = Date.now();
     const activeStories = [];
@@ -214,11 +211,13 @@ function renderStories(stories) {
 }
 
 // ========== رفع منشور ==========
-window.openCreatePage = function() { showPage('create'); };
+function openCreatePage() {
+    showPage('create');
+}
 document.getElementById('createPostFile')?.addEventListener('change', (e) => {
     selectedPostFile = e.target.files[0];
 });
-window.createPost = async function() {
+async function createPost() {
     if (!selectedPostFile) { alert('اختر صورة أو فيديو'); return; }
     const caption = document.querySelector('#createPage .create-caption')?.value || '';
     const statusDiv = document.getElementById('createPostStatus');
@@ -231,7 +230,7 @@ window.createPost = async function() {
     try {
         const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, { method: 'POST', body: fd });
         const data = await res.json();
-        await push(ref(db, 'posts'), {
+        await db.ref('posts').push({
             mediaUrl: data.secure_url,
             mediaType: resourceType,
             caption: caption,
@@ -246,13 +245,13 @@ window.createPost = async function() {
         statusDiv.innerHTML = '✅ تم النشر!';
         setTimeout(() => showPage('feed'), 1500);
     } catch (error) { statusDiv.innerHTML = '❌ فشل النشر: ' + error.message; }
-};
+}
 
 // ========== التفاعلات ==========
-window.toggleLikePost = async function(postId, btn) {
+async function toggleLikePost(postId, btn) {
     if (!currentUser) return;
-    const postRef = ref(db, `posts/${postId}`);
-    const snap = await get(postRef);
+    const postRef = db.ref(`posts/${postId}`);
+    const snap = await postRef.get();
     const post = snap.val();
     let likes = post.likes || 0;
     let likedBy = post.likedBy || {};
@@ -262,16 +261,16 @@ window.toggleLikePost = async function(postId, btn) {
         likes++; likedBy[currentUser.uid] = true;
         await addNotification(post.sender, 'like', currentUser.uid);
     }
-    await update(postRef, { likes, likedBy });
+    await postRef.update({ likes, likedBy });
     btn.classList.toggle('active');
     const countSpan = btn.querySelector('span:last-child');
     if (countSpan) countSpan.innerText = likes;
-};
+}
 
-window.openCommentsPost = async function(postId) {
+async function openCommentsPost(postId) {
     const comment = prompt("أضف تعليقاً:");
     if (comment && comment.trim()) {
-        await push(ref(db, `posts/${postId}/comments`), {
+        await db.ref(`posts/${postId}/comments`).push({
             userId: currentUser.uid,
             username: currentUserData?.username,
             text: comment,
@@ -282,43 +281,43 @@ window.openCommentsPost = async function(postId) {
         renderFeed();
         renderReels();
     }
-};
+}
 
-window.sharePost = function(url) {
+function sharePost(url) {
     if (navigator.share) navigator.share({ url });
     else { navigator.clipboard.writeText(url); alert('✅ تم نسخ الرابط'); }
-};
-window.savePost = function(postId) { alert('تم حفظ المنشور (محاكاة)'); };
+}
+function savePost(postId) { alert('تم حفظ المنشور (محاكاة)'); }
 
-window.toggleFollow = async function(userId, btn) {
+async function toggleFollow(userId, btn) {
     if (!currentUser || currentUser.uid === userId) return;
-    const userRef = ref(db, `users/${currentUser.uid}/following/${userId}`);
-    const targetRef = ref(db, `users/${userId}/followers/${currentUser.uid}`);
-    const snap = await get(userRef);
+    const userRef = db.ref(`users/${currentUser.uid}/following/${userId}`);
+    const targetRef = db.ref(`users/${userId}/followers/${currentUser.uid}`);
+    const snap = await userRef.get();
     if (snap.exists()) {
-        await set(userRef, null); await set(targetRef, null); btn.innerText = 'متابعة';
+        await userRef.remove(); await targetRef.remove(); btn.innerText = 'متابعة';
         await addNotification(userId, 'unfollow', currentUser.uid);
     } else {
-        await set(userRef, true); await set(targetRef, true); btn.innerText = 'متابع';
+        await userRef.set(true); await targetRef.set(true); btn.innerText = 'متابع';
         await addNotification(userId, 'follow', currentUser.uid);
     }
-};
+}
 
 async function addNotification(targetUserId, type, fromUserId) {
     if (targetUserId === fromUserId) return;
     const fromUser = allUsers[fromUserId] || { username: 'مستخدم' };
     const messages = { like: 'أعجب بمنشورك', comment: 'علق على منشورك', follow: 'بدأ بمتابعتك', unfollow: 'توقف عن متابعتك' };
-    await push(ref(db, `notifications/${targetUserId}`), { type, fromUserId, fromUsername: fromUser.username, message: messages[type], timestamp: Date.now(), read: false });
+    await db.ref(`notifications/${targetUserId}`).push({ type, fromUserId, fromUsername: fromUser.username, message: messages[type], timestamp: Date.now(), read: false });
 }
 
 // ========== الملف الشخصي ==========
-window.viewProfile = async function(userId) {
+async function viewProfile(userId) {
     if (!userId) return;
     await loadProfileData(userId);
     showPage('profile');
-};
+}
 async function loadProfileData(userId) {
-    const userSnap = await get(child(ref(db), `users/${userId}`));
+    const userSnap = await db.ref(`users/${userId}`).get();
     const user = userSnap.val();
     if (!user) return;
     const avatarEl = document.getElementById('profileAvatarDisplay');
@@ -348,8 +347,8 @@ async function loadProfileData(userId) {
         }
     }
 }
-window.openMyProfile = function() { if (currentUser) viewProfile(currentUser.uid); };
-window.editProfile = function() { alert('ستتم إضافة تعديل الملف لاحقاً'); };
+function openMyProfile() { if (currentUser) viewProfile(currentUser.uid); }
+function editProfile() { alert('ستتم إضافة تعديل الملف لاحقاً'); }
 
 // ========== صفحة الرسائل ==========
 function renderMessagesPage() {
@@ -415,20 +414,20 @@ function renderMessagesPage() {
 
 // ========== الدردشة الخاصة ==========
 function getChatId(uid1, uid2) { return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`; }
-window.openPrivateChat = async function(otherUserId) {
+async function openPrivateChat(otherUserId) {
     currentChatUserId = otherUserId;
     const user = allUsers[otherUserId];
     document.getElementById('chatUserName').innerText = `@${user?.username || 'مستخدم'}`;
     document.getElementById('chatAvatar').innerHTML = user?.avatarUrl ? `<img src="${user.avatarUrl}" class="w-full h-full rounded-full object-cover">` : (user?.username?.charAt(0) || '👤');
     await loadPrivateMessages(otherUserId);
     document.getElementById('chatPanel').classList.add('open');
-};
-window.closeChatPanel = function() { document.getElementById('chatPanel').classList.remove('open'); currentChatUserId = null; };
+}
+function closeChatPanel() { document.getElementById('chatPanel').classList.remove('open'); currentChatUserId = null; }
 async function loadPrivateMessages(otherUserId) {
     const container = document.getElementById('chatMessages');
     container.innerHTML = '<div class="text-center text-gray-500 py-10">جاري التحميل...</div>';
     const chatId = getChatId(currentUser.uid, otherUserId);
-    const messagesSnap = await get(child(ref(db), `private_messages/${chatId}`));
+    const messagesSnap = await db.ref(`private_messages/${chatId}`).once('value');
     const messages = messagesSnap.val() || {};
     container.innerHTML = '';
     const sorted = Object.entries(messages).sort((a,b)=>a[1].timestamp-b[1].timestamp);
@@ -443,30 +442,30 @@ async function loadPrivateMessages(otherUserId) {
     if (container.innerHTML === '') container.innerHTML = '<div class="text-center text-gray-500 py-10">لا توجد رسائل بعد</div>';
     container.scrollTop = container.scrollHeight;
 }
-window.sendChatMessage = async function() {
+async function sendChatMessage() {
     const input = document.getElementById('chatMessageInput');
     const text = input.value.trim();
     if (!text || !currentChatUserId) return;
     const chatId = getChatId(currentUser.uid, currentChatUserId);
-    await push(ref(db, `private_messages/${chatId}`), { senderId: currentUser.uid, senderName: currentUserData?.username, text, type: 'text', timestamp: Date.now() });
-    await set(ref(db, `private_chats/${currentUser.uid}/${currentChatUserId}`), { lastMessage: text, lastTimestamp: Date.now(), withUser: currentChatUserId });
-    await set(ref(db, `private_chats/${currentChatUserId}/${currentUser.uid}`), { lastMessage: text, lastTimestamp: Date.now(), withUser: currentUser.uid });
+    await db.ref(`private_messages/${chatId}`).push({ senderId: currentUser.uid, senderName: currentUserData?.username, text, type: 'text', timestamp: Date.now() });
+    await db.ref(`private_chats/${currentUser.uid}/${currentChatUserId}`).set({ lastMessage: text, lastTimestamp: Date.now(), withUser: currentChatUserId });
+    await db.ref(`private_chats/${currentChatUserId}/${currentUser.uid}`).set({ lastMessage: text, lastTimestamp: Date.now(), withUser: currentUser.uid });
     input.value = '';
     await loadPrivateMessages(currentChatUserId);
-};
-window.sendChatImage = async function(input) {
+}
+async function sendChatImage(input) {
     const file = input.files[0];
     if (!file || !currentChatUserId) return;
     const fd = new FormData(); fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET);
     const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
     const data = await res.json();
     const chatId = getChatId(currentUser.uid, currentChatUserId);
-    await push(ref(db, `private_messages/${chatId}`), { senderId: currentUser.uid, senderName: currentUserData?.username, imageUrl: data.secure_url, type: 'image', timestamp: Date.now() });
-    await set(ref(db, `private_chats/${currentUser.uid}/${currentChatUserId}`), { lastMessage: '📷 صورة', lastTimestamp: Date.now(), withUser: currentChatUserId });
-    await set(ref(db, `private_chats/${currentChatUserId}/${currentUser.uid}`), { lastMessage: '📷 صورة', lastTimestamp: Date.now(), withUser: currentUser.uid });
+    await db.ref(`private_messages/${chatId}`).push({ senderId: currentUser.uid, senderName: currentUserData?.username, imageUrl: data.secure_url, type: 'image', timestamp: Date.now() });
+    await db.ref(`private_chats/${currentUser.uid}/${currentChatUserId}`).set({ lastMessage: '📷 صورة', lastTimestamp: Date.now(), withUser: currentChatUserId });
+    await db.ref(`private_chats/${currentChatUserId}/${currentUser.uid}`).set({ lastMessage: '📷 صورة', lastTimestamp: Date.now(), withUser: currentUser.uid });
     input.value = '';
     await loadPrivateMessages(currentChatUserId);
-};
+}
 
 // ========== التنقل بين الصفحات ==========
 function showPage(page) {
@@ -574,7 +573,7 @@ function initPages() {
 }
 
 // ========== مراقبة المستخدم ==========
-onAuthStateChanged(auth, async (user) => {
+auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
         await loadUserData();
