@@ -1,28 +1,26 @@
-// firebase-config.js (الإصدار الحديث - الأنسب لك)
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getDatabase } from "firebase/database";
-import { getStorage } from "firebase/storage";
-
+// Firebase Configuration (Modern)
 const firebaseConfig = {
-  apiKey: "AIzaSyAxtEkrEgl0C9djPkxKKX-sENtOzPEbHB8",
-  authDomain: "tope-e5350.firebaseapp.com",
-  databaseURL: "https://tope-e5350-default-rtdb.firebaseio.com/",
-  projectId: "tope-e5350",
-  storageBucket: "tope-e5350.firebasestorage.app",
-  messagingSenderId: "187788115549",
-  appId: "1:187788115549:web:5012a1053d2ff7dced97b4",
-  measurementId: "G-V1XM95PMQC"
+    apiKey: "AIzaSyDr5RBcJ9gcHTdElXxazcEWMBoTYzC_CaU",
+    authDomain: "foxe-3f428.firebaseapp.com",
+    databaseURL: "https://foxe-3f428-default-rtdb.firebaseio.com",
+    projectId: "foxe-3f428",
+    storageBucket: "foxe-3f428.firebasestorage.app",
+    messagingSenderId: "763563407239",
+    appId: "1:763563407239:web:4e558a73bffb5e6e1e8522",
+    measurementId: "G-E7ZVVZ5HPV"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-const storage = getStorage(app);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+const storage = firebase.storage();
 
+// Cloudinary Settings (your account)
 const CLOUD_NAME = 'dnmpmysk6';
 const UPLOAD_PRESET = 'rsxdfdgw';
 
-console.log('✅ SHΔDØW System Ready');
+// Admin Emails - CHANGE THIS TO YOUR EMAIL
+const ADMIN_EMAILS = ['jasim28v@gmail.com'];  // ✅ تم التعديل
 
-export { auth, db, storage, CLOUD_NAME, UPLOAD_PRESET };
+console.log('✅ FOXE Ultimate System Ready');
