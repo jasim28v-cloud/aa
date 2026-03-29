@@ -151,21 +151,6 @@
             color: white;
             cursor: pointer;
         }
-        .global-mute {
-            position: fixed;
-            top: 80px;
-            right: 16px;
-            z-index: 100;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
 
         /* حاوية الفيديوهات */
         .videos-container {
@@ -248,7 +233,6 @@
             cursor: pointer;
         }
         .hashtag { color: #ec489a; cursor: pointer; }
-        .mention { color: #06b6d4; cursor: pointer; }
 
         /* الأزرار الجانبية */
         .side-actions {
@@ -365,7 +349,7 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.8); }
         .form-group label i { color: #ec489a; margin-right: 8px; }
-        .form-group textarea, .form-group input { width: 100%; padding: 14px 16px; background: #1a1a2a; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; color: white; }
+        .form-group textarea, .form-group input { width: 100%; padding: 14px 16px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; color: white; }
         .upload-progress { margin: 20px 0; display: none; }
         .progress-bar { background: rgba(255,255,255,0.1); border-radius: 30px; height: 8px; overflow: hidden; }
         .progress-fill { background: linear-gradient(90deg, #ec489a, #ff6b6b); width: 0%; height: 100%; transition: width 0.3s; }
@@ -388,16 +372,10 @@
             overflow-y: auto;
         }
         .profile-panel.open { transform: translateX(0); }
-        .profile-cover {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #ec489a, #06b6d4);
-            object-fit: cover;
-        }
         .profile-header {
             text-align: center;
-            padding: 0 20px 20px;
-            position: relative;
+            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, #ec489a, #ff6b6b);
         }
         .profile-avatar-large {
             width: 100px;
@@ -408,7 +386,7 @@
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            margin: -50px auto 10px;
+            margin: 0 auto;
             border: 3px solid white;
             overflow: hidden;
             cursor: pointer;
@@ -423,26 +401,11 @@
         .stat { text-align: center; }
         .stat-number { font-size: 22px; font-weight: bold; }
         .stat-label { font-size: 12px; opacity: 0.7; }
-        .xp-bar {
-            width: 100%;
-            max-width: 200px;
-            margin: 10px auto;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            height: 6px;
-        }
-        .xp-fill {
-            background: #ec489a;
-            width: 0%;
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.3s;
-        }
-        .edit-profile-btn, .logout-btn, .follow-btn, .message-btn {
+        .edit-profile-btn, .logout-btn, .follow-btn {
             background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 20px;
-            border-radius: 30px;
+            padding: 10px 28px;
+            border-radius: 40px;
             color: white;
             margin: 0 8px;
             cursor: pointer;
@@ -461,167 +424,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            position: relative;
-        }
-        .video-thumb .views {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.6);
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 12px;
         }
 
-        /* صفحة الدردشة */
-        .chat-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            z-index: 350;
-            transform: translateX(100%);
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .chat-panel.open { transform: translateX(0); }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .chat-message {
-            display: flex;
-            gap: 8px;
-            max-width: 85%;
-        }
-        .chat-message.sent { align-self: flex-end; flex-direction: row-reverse; }
-        .message-bubble {
-            background: #1a1a2a;
-            padding: 8px 12px;
-            border-radius: 18px;
-        }
-        .message-bubble.sent { background: #ec489a; }
-        .message-image { max-width: 200px; border-radius: 12px; cursor: pointer; }
-        .chat-input-area {
-            display: flex;
-            gap: 12px;
-            padding: 12px;
-            background: #111;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .chat-input-area input {
-            flex: 1;
-            background: #1a1a2a;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 16px;
-            color: white;
-        }
-        .conversations-list {
-            padding: 16px;
-            overflow-y: auto;
-        }
-        .conversation-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-        }
-
-        /* صفحة الأصوات */
-        .sounds-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            z-index: 350;
-            transform: translateX(100%);
-            transition: 0.3s;
-        }
-        .sounds-panel.open { transform: translateX(0); }
-        .sound-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-        }
-
-        /* صفحة الإشعارات */
-        .notifications-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            z-index: 350;
-            transform: translateX(100%);
-            transition: 0.3s;
-        }
-        .notifications-panel.open { transform: translateX(0); }
-        .notification-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* صفحة البحث */
-        .search-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            z-index: 350;
-            transform: translateX(100%);
-            transition: 0.3s;
-        }
-        .search-panel.open { transform: translateX(0); }
-        .search-input {
-            width: calc(100% - 32px);
-            margin: 16px;
-            padding: 12px 16px;
-            background: #1a1a2a;
-            border: none;
-            border-radius: 30px;
-            color: white;
-        }
-        .search-result {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-        }
-
-        .watermark {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 25;
-            pointer-events: none;
-        }
+        .loading { text-align: center; padding: 50px; color: rgba(255,255,255,0.5); }
+        .spinner { width: 36px; height: 36px; border: 3px solid rgba(236,72,153,0.3); border-top-color: #ec489a; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .heart-animation {
             position: fixed;
             font-size: 80px;
@@ -633,35 +440,6 @@
         @keyframes heartFloat {
             0% { transform: scale(0.5) translateY(0); opacity: 1; }
             100% { transform: scale(1.5) translateY(-100px); opacity: 0; }
-        }
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: rgba(255,255,255,0.5);
-        }
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid rgba(236,72,153,0.3);
-            border-top-color: #ec489a;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.6);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 20;
         }
     </style>
 </head>
@@ -688,7 +466,7 @@
             <button onclick="register()">إنشاء حساب</button>
             <div id="regMsg" class="text-red-500 text-sm text-center mt-3"></div>
         </div>
-        <div class="version">الإصدار 4.0 | مارس 2026</div>
+        <div class="version">الإصدار 3.0 | مارس 2026</div>
     </div>
 </div>
 
@@ -698,11 +476,8 @@
         <div class="logo-text">TikToki ❤️</div>
         <div class="top-icons">
             <i class="fas fa-search top-icon" onclick="openSearch()"></i>
-            <i class="fas fa-music top-icon" onclick="openSounds()"></i>
-            <i class="fas fa-bell top-icon" onclick="openNotifications()"></i>
         </div>
     </div>
-    <div class="global-mute" onclick="toggleGlobalMute()"><i class="fas fa-volume-up" id="globalMuteIcon"></i></div>
 
     <div class="videos-container" id="videosContainer">
         <div class="loading"><div class="spinner"></div><span>جاري التحميل...</span></div>
@@ -710,9 +485,7 @@
 
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home')"><i class="fas fa-home"></i><span>الرئيسية</span></button>
-        <button class="nav-item" onclick="openUploadPanel()"><i class="fas fa-plus-circle"></i><span>رفع</span></button>
-        <button class="nav-item" onclick="openMessages()"><i class="fas fa-comment"></i><span>الرسائل</span></button>
-        <button class="nav-item" onclick="openMyProfile()"><i class="fas fa-user"></i><span>الملف</span></button>
+        <button class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>الملف</span></button>
     </div>
 
     <!-- لوحة الرفع -->
@@ -725,7 +498,7 @@
             </div>
             <input type="file" id="videoFileInput" accept="video/*" style="display:none" onchange="selectVideoFile(this)">
             <div class="upload-form">
-                <div class="form-group"><label><i class="fas fa-pen"></i> وصف الفيديو</label><textarea id="videoDescription" rows="3" placeholder="اكتب وصفاً... استخدم # للهاشتاقات أو @ للإشارة" oninput="showSuggestions()"></textarea><div id="suggestions" class="flex flex-wrap gap-2 mt-2"></div></div>
+                <div class="form-group"><label><i class="fas fa-pen"></i> وصف الفيديو</label><textarea id="videoDescription" rows="3" placeholder="اكتب وصفاً... استخدم # للهاشتاقات" oninput="showHashtagSuggestions()"></textarea><div id="hashtagSuggestions" class="flex flex-wrap gap-2 mt-2"></div></div>
                 <div class="form-group"><label><i class="fas fa-music"></i> اسم الصوت</label><input type="text" id="videoMusic" placeholder="مثال: Original Sound - أو اسم أغنية"></div>
                 <div class="upload-progress" id="uploadProgressBar"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><div class="text-center text-sm mt-2 text-[#ec489a]" id="progressText">0%</div></div>
                 <div class="upload-actions"><button class="cancel-upload-btn" onclick="closeUploadPanel()">إلغاء</button><button class="upload-submit-btn" id="uploadSubmitBtn" onclick="uploadVideo()">رفع الفيديو</button></div>
@@ -736,18 +509,15 @@
 
     <!-- صفحة الملف الشخصي -->
     <div id="profilePanel" class="profile-panel">
-        <div class="back-btn" onclick="closeProfile()"><i class="fas fa-arrow-right"></i></div>
-        <div id="profileCover" class="profile-cover" style="background: linear-gradient(135deg, #ec489a, #06b6d4);"></div>
+        <div class="back-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;" onclick="closeProfile()"><i class="fas fa-arrow-right"></i></div>
         <div class="profile-header">
             <div class="profile-avatar-large" id="profileAvatarDisplay" onclick="changeAvatar()">👤</div>
-            <h2 id="profileNameDisplay" class="mt-2"></h2>
-            <p id="profileBioDisplay" class="text-sm opacity-70"></p>
-            <div id="xpBar" class="xp-bar"><div id="xpFill" class="xp-fill"></div></div>
+            <h2 id="profileNameDisplay" class="mt-4 text-xl font-bold"></h2>
+            <p id="profileBioDisplay" class="text-sm opacity-70 mt-1"></p>
             <div class="profile-stats">
                 <div class="stat"><div class="stat-number" id="profileFollowing">0</div><div class="stat-label">يتابع</div></div>
                 <div class="stat"><div class="stat-number" id="profileFollowers">0</div><div class="stat-label">متابع</div></div>
                 <div class="stat"><div class="stat-number" id="profileLikes">0</div><div class="stat-label">إجمالي الإعجابات</div></div>
-                <div class="stat"><div class="stat-number" id="profileLevel">1</div><div class="stat-label">المستوى</div></div>
             </div>
             <div id="profileActions"></div>
         </div>
@@ -756,58 +526,10 @@
 
     <!-- لوحة تعديل الملف الشخصي -->
     <div id="editProfilePanel" class="profile-panel" style="transform:translateX(100%)">
-        <div class="back-btn" onclick="closeEditProfile()"><i class="fas fa-arrow-right"></i></div>
+        <div class="back-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;" onclick="closeEditProfile()"><i class="fas fa-arrow-right"></i></div>
         <div class="profile-header"><div class="profile-avatar-large" id="editAvatarDisplay" onclick="changeAvatar()">👤</div><p class="text-xs text-gray-400 mt-2">اضغط لتغيير الصورة</p></div>
         <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-        <div class="p-4">
-            <input type="text" id="editUsername" class="w-full p-3 rounded-xl bg-[#1a1a2a] border-none text-white mb-3" placeholder="اسم المستخدم">
-            <textarea id="editBio" class="w-full p-3 rounded-xl bg-[#1a1a2a] border-none text-white" rows="3" placeholder="السيرة الذاتية"></textarea>
-            <div class="mb-3">
-                <label class="text-sm text-gray-400">صورة الغلاف</label>
-                <div class="w-full h-32 bg-[#1a1a2a] rounded-xl mt-1 cursor-pointer overflow-hidden" onclick="document.getElementById('coverInput').click()">
-                    <img id="coverPreview" class="w-full h-full object-cover">
-                </div>
-                <input type="file" id="coverInput" accept="image/*" style="display:none" onchange="uploadCover(this)">
-            </div>
-            <button onclick="saveProfile()" class="w-full mt-4 bg-gradient-to-r from-[#ec489a] to-[#06b6d4] text-white p-3 rounded-xl font-bold">حفظ</button>
-        </div>
-    </div>
-
-    <!-- صفحة الدردشة -->
-    <div id="chatPanel" class="chat-panel">
-        <div class="panel-header"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500 flex items-center justify-center" id="chatAvatar">👤</div><h3 id="chatUserName">محادثة</h3></div><button class="close-btn" onclick="closeChat()"><i class="fas fa-times"></i></button></div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input-area">
-            <div class="cursor-pointer text-2xl" onclick="document.getElementById('chatImageInput').click()"><i class="fas fa-image"></i></div>
-            <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(this)">
-            <input type="text" id="chatMessageInput" placeholder="اكتب رسالة...">
-            <button onclick="sendChatMessage()" class="bg-gradient-to-r from-pink-500 to-cyan-500 text-white px-4 rounded-full"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <!-- قائمة المحادثات -->
-    <div id="conversationsPanel" class="chat-panel">
-        <div class="panel-header"><h3>المحادثات</h3><button class="close-btn" onclick="closeConversations()"><i class="fas fa-times"></i></button></div>
-        <div id="conversationsList" class="conversations-list"></div>
-    </div>
-
-    <!-- صفحة الأصوات -->
-    <div id="soundsPanel" class="sounds-panel">
-        <div class="panel-header"><h3>الأصوات الشائعة</h3><button class="close-btn" onclick="closeSounds()"><i class="fas fa-times"></i></button></div>
-        <div id="soundsList"></div>
-    </div>
-
-    <!-- صفحة الإشعارات -->
-    <div id="notificationsPanel" class="notifications-panel">
-        <div class="panel-header"><h3>الإشعارات</h3><button class="close-btn" onclick="closeNotifications()"><i class="fas fa-times"></i></button></div>
-        <div id="notificationsList"></div>
-    </div>
-
-    <!-- صفحة البحث -->
-    <div id="searchPanel" class="search-panel">
-        <div class="panel-header"><h3>بحث</h3><button class="close-btn" onclick="closeSearch()"><i class="fas fa-times"></i></button></div>
-        <input type="text" id="searchInput" class="search-input" placeholder="بحث عن مستخدمين، هاشتاقات، فيديوهات..." onkeyup="searchAll()">
-        <div id="searchResults"></div>
+        <div class="p-4"><input type="text" id="editUsername" class="w-full p-3 rounded-xl bg-[#1a1a2a] border-none text-white mb-3" placeholder="اسم المستخدم"><textarea id="editBio" class="w-full p-3 rounded-xl bg-[#1a1a2a] border-none text-white" rows="3" placeholder="السيرة الذاتية"></textarea><button onclick="saveProfile()" class="w-full mt-4 bg-gradient-to-r from-[#ec489a] to-[#06b6d4] text-white p-3 rounded-xl font-bold">حفظ</button></div>
     </div>
 </div>
 
